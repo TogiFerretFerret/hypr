@@ -51,4 +51,7 @@ print(f'C8={c[\"color1\"].lstrip(\"#\")}')
     "$HOME/.config/hypr/modules/graphics.conf"
 
 hyprctl reload 2>/dev/null
+
+# Sync Tauon theme
+bash ~/tauon/sync-theme.sh 2>/dev/null
 echo "Wallpaper: $(basename "$WALLPAPER")"
