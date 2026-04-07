@@ -5,8 +5,27 @@
 WALLDIR="$HOME/Pictures/Wallpapers"
 THUMBDIR="$HOME/.cache/wallpaper-thumbs"
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+COLORS_JSON="$HOME/.cache/wal/colors.json"
 
 mkdir -p "$THUMBDIR"
+
+# Read Material You colors for rofi theme
+if [ -f "$COLORS_JSON" ]; then
+    eval "$(python3 -c "
+import json
+d = json.load(open('$COLORS_JSON'))
+c = d['colors']
+s = d['special']
+print(f'ROFI_BG=\"{s[\"background\"]}eb\"')
+print(f'ROFI_ACCENT=\"{c[\"color4\"]}\"')
+print(f'ROFI_DIM=\"{c[\"color8\"]}\"')
+")"
+    # Patch the rofi theme with current colors
+    sed -i \
+        -e "s/accent: #[0-9a-fA-F]*/accent: $ROFI_ACCENT/" \
+        -e "s/bg: #[0-9a-fA-F]*/bg: $ROFI_BG/" \
+        ~/.config/rofi/wallpaper.rasi
+fi
 
 # Generate thumbnails if missing
 for img in "$WALLDIR"/*.{png,jpg,jpeg} ; do
