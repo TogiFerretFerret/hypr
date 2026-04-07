@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
 # Emergency: set safe wallpaper
-~/.config/hypr/scripts/wallpaper.sh ~/Pictures/Wallpapers/7.png
+~/.config/hypr/scripts/wallpaper.sh ~/Pictures/Wallpapers/lakeside-dock-flowers.png
