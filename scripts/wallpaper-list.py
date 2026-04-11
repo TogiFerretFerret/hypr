@@ -51,7 +51,7 @@ def get_local_wallpapers():
 def get_collection_wallpapers():
     return get_walls_from_dir(COLLECTIONDIR, "collection")
 
-def get_wallhaven_wallpapers(query="citlali"):
+def get_wallhaven_wallpapers(query=""):
     params = {
         "q": query,
         "categories": "110",
@@ -62,7 +62,7 @@ def get_wallhaven_wallpapers(query="citlali"):
         "order": "desc",
         "apikey": API_KEY
     }
-    
+
     try:
         r = requests.get(WALLHAVEN_URL, params=params, timeout=10)
         r.raise_for_status()
@@ -87,7 +87,7 @@ if __name__ == "__main__":
     parser.add_argument("--local-only", action="store_true")
     parser.add_argument("--online-only", action="store_true")
     parser.add_argument("--collection-only", action="store_true")
-    parser.add_argument("--query", type=str, default="citlali")
+    parser.add_argument("--query", type=str, default="")
     args = parser.parse_args()
 
     if args.local_only:
@@ -102,3 +102,5 @@ if __name__ == "__main__":
         coll_walls = get_collection_wallpapers()
         remote_walls = get_wallhaven_wallpapers(args.query)
         print(json.dumps(local_walls + coll_walls + remote_walls))
+    
+    sys.stdout.flush()
