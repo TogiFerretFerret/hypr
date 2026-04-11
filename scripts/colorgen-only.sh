@@ -25,3 +25,4 @@ print(f'C8={c[\"color1\"].lstrip(\"#\")}')
 
 hyprctl reload 2>/dev/null
 bash ~/tauon/sync-theme.sh 2>/dev/null
+bash "$SCRIPT_DIR/swaync-colors.sh" 2>/dev/null

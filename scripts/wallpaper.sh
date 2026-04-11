@@ -54,4 +54,7 @@ hyprctl reload 2>/dev/null
 
 # Sync Tauon theme
 bash ~/tauon/sync-theme.sh 2>/dev/null
+
+# Sync swaync colors
+bash "$SCRIPT_DIR/swaync-colors.sh" 2>/dev/null
 echo "Wallpaper: $(basename "$WALLPAPER")"
