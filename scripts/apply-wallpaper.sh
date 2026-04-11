@@ -10,6 +10,9 @@ SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 
 mkdir -p "$ONLINEDIR"
 
+# Clean up any old downloads in the main folder
+mv "$WALLDIR"/wallhaven-* "$ONLINEDIR"/ 2>/dev/null
+
 if [ "$SOURCE" = "wallhaven" ]; then
     # Extract extension or assume jpg
     EXT="${URL_OR_PATH##*.}"
