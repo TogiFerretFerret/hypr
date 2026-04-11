@@ -57,4 +57,8 @@ bash ~/tauon/sync-theme.sh 2>/dev/null
 
 # Sync swaync colors
 bash "$SCRIPT_DIR/swaync-colors.sh" 2>/dev/null
+
+# Update fastfetch colors from template
+python3 "$SCRIPT_DIR/fastfetch-colors-magi.py" 2>/dev/null
+
 echo "Wallpaper: $(basename "$WALLPAPER")"
