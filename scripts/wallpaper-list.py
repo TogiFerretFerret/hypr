@@ -9,7 +9,11 @@ import subprocess
 WALLDIR = os.path.expanduser("~/Pictures/Wallpapers")
 COLLECTIONDIR = os.path.join(WALLDIR, "Online")
 THUMBDIR = os.path.expanduser("~/.cache/wallpaper-thumbs")
-API_KEY = "QDjvjvXCL5w1Q4GcLSJ0Fw3SXazVPS5n"
+API_KEY_FILE = os.path.join(os.path.dirname(__file__), ".wallhaven_api_key")
+API_KEY = ""
+if os.path.exists(API_KEY_FILE):
+    with open(API_KEY_FILE, "r") as f:
+        API_KEY = f.read().strip()
 WALLHAVEN_URL = "https://wallhaven.cc/api/v1/search"
 
 def get_walls_from_dir(directory, source_name):
