@@ -176,11 +176,22 @@ Item {
                     yScale: clockText.pixelScale
                     origin.x: clockText.width / 2
                     origin.y: clockText.height / 2
-                }
-                Timer {
-                    interval: 1000; running: true; repeat: true
-                    onTriggered: { clockText.text = Qt.formatTime(new Date(), "hh:mm"); ampmText.text = Qt.formatTime(new Date(), "ap") + "." }
-                }
+	    }
+	    Timer {
+    interval: 1000; running: true; repeat: true
+    onTriggered: {
+        let now = new Date();
+        // Combining them into one string ensures 12-hour formatting
+        let formatted = Qt.formatTime(now, "h:mm ap"); // e.g., "10:22 pm"
+        
+        // If you need them in separate text fields, split them like this:
+        let parts = formatted.split(" ");
+        clockText.text = parts[0];
+        ampmText.text = parts[1] + ".";
+    }
+}
+
+                
             }
             Text {
                 id: ampmText
