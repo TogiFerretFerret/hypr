@@ -8,7 +8,7 @@ SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 
 mkdir -p "$(dirname "$CURRENT_FILE")" "$HOME/.cache/wal"
 
-mapfile -t WALLS < <(find "$WALLDIR" -maxdepth 1 -type f \( -iname '*.png' -o -iname '*.jpg' -o -iname '*.jpeg' \) | sort)
+mapfile -t WALLS < <(find "$WALLDIR" -type f \( -iname '*.png' -o -iname '*.jpg' -o -iname '*.jpeg' \) | sort)
 [ ${#WALLS[@]} -eq 0 ] && exit 1
 
 pick_wallpaper() {
