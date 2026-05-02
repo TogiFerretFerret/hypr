@@ -49,3 +49,9 @@ hl.window_rule({
     match   = { class = "^(org%.gnome%.Nautilus)$" },
     opacity = { active = 0.78 },
 })
+
+hl.window_rule({
+    name    = "glass-obsidian",
+    match   = { class = "^(obsidian)$" },
+    opacity = { active = 0.78, inactive = 0.72 },
+})
