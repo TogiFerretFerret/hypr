@@ -17,9 +17,9 @@ hl.bind(mainMod .. " + SHIFT + V", hl.dsp.exec_cmd("rofi -modi emoji -show emoji
 
 -- ── Random Useful Binds ──
 hl.bind("ALT + SHIFT + S", hl.dsp.exec_cmd("/home/river/go/bin/spofi"))
-hl.bind("ALT + SHIFT + D", hl.dsp.exec_cmd("swaync-client --toggle-dnd"))
-hl.bind("ALT + SHIFT + E", hl.dsp.exec_cmd("swaync-client --close-latest"))
-hl.bind("ALT + SHIFT + C", hl.dsp.exec_cmd("swaync-client --close-all"))
+hl.bind("ALT + SHIFT + D", hl.dsp.exec_cmd("touch /tmp/qs-notif-dnd"))
+hl.bind("ALT + SHIFT + E", hl.dsp.exec_cmd("touch /tmp/qs-notif-dismiss"))
+hl.bind("ALT + SHIFT + C", hl.dsp.exec_cmd("touch /tmp/qs-notif-clear"))
 hl.bind("CTRL + SHIFT + 5", hl.dsp.exec_cmd("hyprshot --mode region"))
 
 -- ── Pseudotiling / Dwindle ──

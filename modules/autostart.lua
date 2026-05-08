@@ -12,11 +12,14 @@ hl.on("hyprland.start", function()
 
     -- UI Elements
     hl.exec_cmd("quickshell &")
-    hl.exec_cmd("GDK_DPI_SCALE=0.85 swaync &")
+    -- Notifications handled by quickshell NotificationServer
 
     -- Wallpaper with swww (color-synced)
     hl.exec_cmd("swww-daemon &")
     hl.exec_cmd("sleep 1 && ~/.config/hypr/scripts/wallpaper.sh ~/Pictures/Wallpapers/lakeside-dock-flowers.png")
+
+    -- Stats Bridge (for dashboards)
+    hl.exec_cmd("python3 ~/.config/hypr/scripts/stats-bridge.py &")
 
     -- Visual Fixes
     hl.exec_cmd("hyprctl setcursor Bibata-Hyprland 24")
