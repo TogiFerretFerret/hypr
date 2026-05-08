@@ -76,6 +76,9 @@ hl.bind(mainMod .. " + SHIFT + D", hl.dsp.window.move({ workspace = "special:cha
 hl.bind(mainMod .. " + W",         hl.dsp.exec_cmd("touch /tmp/qs-wallpaper-picker"))
 hl.bind(mainMod .. " + SHIFT + W", hl.dsp.exec_cmd("~/.config/hypr/scripts/wallpaper.sh"))
 
+-- ── Karaoke mode ──
+hl.bind(mainMod .. " + K", hl.dsp.exec_cmd("touch /tmp/qs-karaoke"))
+
 -- ── Multimedia ──
 hl.bind("XF86AudioRaiseVolume",  hl.dsp.exec_cmd("wpctl set-volume -l 1 @DEFAULT_AUDIO_SINK@ 5%+"),               { locked = true, repeating = true })
 hl.bind("XF86AudioLowerVolume",  hl.dsp.exec_cmd("wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-"),                     { locked = true, repeating = true })

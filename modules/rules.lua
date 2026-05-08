@@ -37,21 +37,21 @@ hl.window_rule({
     xray  = 0,
 })
 
--- Glass Effect
-hl.window_rule({
-    name    = "glass-arianna",
-    match   = { class = "^(org%.kde%.arianna)$" },
-    opacity = { active = 0.85, inactive = 0.85 },
-})
-
-hl.window_rule({
-    name    = "glass-nautilus",
-    match   = { class = "^(org%.gnome%.Nautilus)$" },
-    opacity = { active = 0.78 },
-})
-
-hl.window_rule({
-    name    = "glass-obsidian",
-    match   = { class = "^(obsidian)$" },
-    opacity = { active = 0.78, inactive = 0.72 },
-})
+-- Glass Effect (disabled)
+-- hl.window_rule({
+--     name    = "glass-arianna",
+--     match   = { class = "^(org%.kde%.arianna)$" },
+--     opacity = { active = 0.85, inactive = 0.85 },
+-- })
+--
+-- hl.window_rule({
+--     name    = "glass-nautilus",
+--     match   = { class = "^(org%.gnome%.Nautilus)$" },
+--     opacity = { active = 0.78 },
+-- })
+--
+-- hl.window_rule({
+--     name    = "glass-obsidian",
+--     match   = { class = "^(obsidian)$" },
+--     opacity = { active = 0.78, inactive = 0.72 },
+-- })
