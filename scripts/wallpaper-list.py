@@ -16,37 +16,53 @@ if os.path.exists(API_KEY_FILE):
         API_KEY = f.read().strip()
 WALLHAVEN_URL = "https://wallhaven.cc/api/v1/search"
 
-def get_walls_from_dir(directory, source_name):
+def get_walls_from_dir(directory, source_name, recursive=True):
     if not os.path.exists(THUMBDIR):
         os.makedirs(THUMBDIR)
 
     walls = []
     if not os.path.exists(directory):
         return walls
-    
-    for f in os.listdir(directory):
-        if f.lower().endswith(('.png', '.jpg', '.jpeg')):
-            path = os.path.join(directory, f)
-            if os.path.isdir(path): continue # Skip subdirs
 
-            thumb_path = os.path.join(THUMBDIR, f)
-            
-            if not os.path.exists(thumb_path) or os.path.getmtime(path) > os.path.getmtime(thumb_path):
-                try:
-                    subprocess.run([
-                        "magick", path, "-resize", "300x200^", "-gravity", "center", 
-                        "-extent", "300x200", "-quality", "85", thumb_path
-                    ], check=True, capture_output=True)
-                except Exception as e:
-                    thumb_path = path
+    if recursive:
+        entries = []
+        for root, dirs, files in os.walk(directory):
+            # Skip hidden dirs like .git
+            dirs[:] = [d for d in dirs if not d.startswith('.')]
+            for f in files:
+                if f.lower().endswith(('.png', '.jpg', '.jpeg', '.webp')):
+                    entries.append((root, f))
+    else:
+        entries = [(directory, f) for f in os.listdir(directory)
+                   if f.lower().endswith(('.png', '.jpg', '.jpeg', '.webp'))
+                   and not os.path.isdir(os.path.join(directory, f))]
 
-            walls.append({
-                "name": f,
-                "path": path,
-                "thumb": "file://" + thumb_path,
-                "source": source_name,
-                "full": path
-            })
+    for root, f in entries:
+        path = os.path.join(root, f)
+        # Use relative path as display name for subdirs
+        rel = os.path.relpath(path, directory)
+        display_name = rel if os.sep in rel else f
+
+        # Unique thumb name using relative path to avoid collisions
+        thumb_name = rel.replace(os.sep, '_')
+        thumb_path = os.path.join(THUMBDIR, thumb_name)
+
+        if not os.path.exists(thumb_path) or os.path.getmtime(path) > os.path.getmtime(thumb_path):
+            try:
+                subprocess.run([
+                    "magick", path, "-resize", "300x200^", "-gravity", "center",
+                    "-extent", "300x200", "-quality", "85", thumb_path
+                ], check=True, capture_output=True)
+            except Exception as e:
+                thumb_path = path
+
+        walls.append({
+            "name": display_name,
+            "path": path,
+            "thumb": "file://" + thumb_path,
+            "source": source_name,
+            "full": path
+        })
     return sorted(walls, key=lambda x: x["name"])
 
 def get_local_wallpapers():
