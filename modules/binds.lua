@@ -11,15 +11,15 @@ hl.bind(mainMod .. " + R", hl.dsp.exec_cmd(Menu))
 hl.bind(mainMod .. " + C", hl.dsp.window.close())
 hl.bind(mainMod .. " + F", hl.dsp.window.float({ action = "toggle" }))
 
--- ── Clipvault ──
-hl.bind(mainMod .. " + V", hl.dsp.exec_cmd("clipvault list | rofi -dmenu -display-columns 2 -theme ~/.config/rofi/clipboard.rasi -eh 2 | clipvault get | wl-copy"))
+-- ── Clipboard (quickshell) — uses global shortcut ──
+hl.bind(mainMod .. " + V", hl.dsp.global("quickshell:clipboard"))
 hl.bind(mainMod .. " + SHIFT + V", hl.dsp.exec_cmd("rofi -modi emoji -show emoji"))
 
 -- ── Random Useful Binds ──
 hl.bind("ALT + SHIFT + S", hl.dsp.exec_cmd("/home/river/go/bin/spofi"))
-hl.bind("ALT + SHIFT + D", hl.dsp.exec_cmd("touch /tmp/qs-notif-dnd"))
-hl.bind("ALT + SHIFT + E", hl.dsp.exec_cmd("touch /tmp/qs-notif-dismiss"))
-hl.bind("ALT + SHIFT + C", hl.dsp.exec_cmd("touch /tmp/qs-notif-clear"))
+hl.bind("ALT + SHIFT + D", hl.dsp.global("quickshell:notif-dnd"))
+hl.bind("ALT + SHIFT + E", hl.dsp.global("quickshell:notif-dismiss"))
+hl.bind("ALT + SHIFT + C", hl.dsp.global("quickshell:notif-clear"))
 hl.bind("CTRL + SHIFT + 5", hl.dsp.exec_cmd("hyprshot --mode region"))
 
 -- ── Pseudotiling / Dwindle ──
@@ -73,11 +73,11 @@ hl.bind(mainMod .. " + D",         hl.dsp.workspace.toggle_special("chat"))
 hl.bind(mainMod .. " + SHIFT + D", hl.dsp.window.move({ workspace = "special:chat" }))
 
 -- ── Wallpaper ──
-hl.bind(mainMod .. " + W",         hl.dsp.exec_cmd("touch /tmp/qs-wallpaper-picker"))
+hl.bind(mainMod .. " + W",         hl.dsp.global("quickshell:wallpaper"))
 hl.bind(mainMod .. " + SHIFT + W", hl.dsp.exec_cmd("~/.config/hypr/scripts/wallpaper.sh"))
 
 -- ── Karaoke mode ──
-hl.bind(mainMod .. " + K", hl.dsp.exec_cmd("touch /tmp/qs-karaoke"))
+hl.bind(mainMod .. " + K", hl.dsp.global("quickshell:karaoke"))
 
 -- ── Multimedia ──
 hl.bind("XF86AudioRaiseVolume",  hl.dsp.exec_cmd("wpctl set-volume -l 1 @DEFAULT_AUDIO_SINK@ 5%+"),               { locked = true, repeating = true })

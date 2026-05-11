@@ -16,7 +16,8 @@ url = (
     '&current=temperature_2m,apparent_temperature,relative_humidity_2m'
     ',wind_speed_10m,wind_direction_10m,weather_code'
     '&hourly=temperature_2m,weather_code'
-    '&temperature_unit=fahrenheit&wind_speed_unit=kmh&timezone=auto&forecast_days=2'
+    '&daily=temperature_2m_max,temperature_2m_min,weather_code'
+    '&temperature_unit=fahrenheit&wind_speed_unit=kmh&timezone=auto&forecast_days=7'
 )
 
 try:
@@ -51,8 +52,31 @@ times = d['hourly']['time']
 temps = d['hourly']['temperature_2m']
 codes = d['hourly']['weather_code']
 
+# Today's remaining hourly (next 6 hours)
 future = [(i, t) for i, t in enumerate(times)
           if datetime.datetime.fromisoformat(t) >= now][:6]
 for i, t in future:
     dt = datetime.datetime.fromisoformat(t)
-    print(dt.strftime('%H:%M') + '|' + str(round(temps[i])) + '|' + wmo.get(codes[i], 'Cloudy'))
+    print(dt.strftime('%-I:%M %p') + '|' + str(round(temps[i])) + '|' + wmo.get(codes[i], 'Cloudy'))
+
+# Daily forecast (7 days)
+print('---DAILY---')
+daily = d.get('daily', {})
+dtimes = daily.get('time', [])
+dmaxs = daily.get('temperature_2m_max', [])
+dmins = daily.get('temperature_2m_min', [])
+dcodes = daily.get('weather_code', [])
+for i, t in enumerate(dtimes):
+    dt = datetime.datetime.strptime(t, '%Y-%m-%d')
+    day = dt.strftime('%a')
+    if dt.date() == now.date():
+        day = 'Today'
+    elif dt.date() == (now + datetime.timedelta(days=1)).date():
+        day = 'Tmrw'
+    print(day + '|' + str(round(dmaxs[i])) + '|' + str(round(dmins[i])) + '|' + wmo.get(dcodes[i], 'Cloudy') + '|' + t)
+
+# All hourly data grouped by date (for drill-down)
+print('---HOURLY-ALL---')
+for i, t in enumerate(times):
+    dt = datetime.datetime.fromisoformat(t)
+    print(dt.strftime('%Y-%m-%d') + '|' + dt.strftime('%-I %p') + '|' + str(round(temps[i])) + '|' + wmo.get(codes[i], 'Cloudy'))
