@@ -224,6 +224,10 @@ def generate_discord_css(colors):
     quickcss = Path.home() / ".config" / "legcord" / "quickCss.css"
     quickcss.write_text(css)
 
+    # Write zen browser accent color for live sync
+    zen_color_file = Path.home() / ".cache" / "matugen-zen-color"
+    zen_color_file.write_text(primary + "\n")
+
 
 if __name__ == "__main__":
     main()
