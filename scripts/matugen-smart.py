@@ -228,6 +228,20 @@ def generate_discord_css(colors):
     zen_color_file = Path.home() / ".cache" / "matugen-zen-color"
     zen_color_file.write_text(primary + "\n")
 
+    # Write obsidian color sync — sed the theme.css directly (obsidian hot reloads themes)
+    import re
+    theme_path = Path.home() / "Documents" / "Obsidian Vault" / ".obsidian" / "themes" / "RiverVault" / "theme.css"
+    try:
+        css = theme_path.read_text()
+        css = re.sub(r'--rv-accent: [^;]+;', f'--rv-accent: {primary};', css)
+        css = re.sub(r'--rv-accent-dim: [^;]+;', f'--rv-accent-dim: {primary_container};', css)
+        css = re.sub(r'--rv-accent-subtle: [^;]+;', f'--rv-accent-subtle: color-mix(in srgb, {primary} 10%, transparent);', css)
+        css = re.sub(r'--rv-accent-faint: [^;]+;', f'--rv-accent-faint: color-mix(in srgb, {primary} 5%, transparent);', css)
+        css = re.sub(r'--rv-panel-border: [^;]+;', f'--rv-panel-border: 1px solid color-mix(in srgb, {primary} 8%, transparent);', css)
+        theme_path.write_text(css)
+    except Exception:
+        pass
+
 
 if __name__ == "__main__":
     main()
