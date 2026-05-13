@@ -27,22 +27,20 @@ hl.bind(mainMod .. " + P", hl.dsp.window.pseudo())
 hl.bind(mainMod .. " + J", hl.dsp.layout("togglesplit"))
 
 -- ── Movement: Resize ──
-hl.bind(mainMod .. " + SHIFT + H", hl.dsp.exec_cmd("hyprctl dispatch resizeactive -30 0"), { locked = true, repeating = true })
-hl.bind(mainMod .. " + SHIFT + J", hl.dsp.exec_cmd("hyprctl dispatch resizeactive 0 30"),  { locked = true, repeating = true })
-hl.bind(mainMod .. " + SHIFT + K", hl.dsp.exec_cmd("hyprctl dispatch resizeactive 0 -30"), { locked = true, repeating = true })
-hl.bind(mainMod .. " + SHIFT + L", hl.dsp.exec_cmd("hyprctl dispatch resizeactive 30 0"),  { locked = true, repeating = true })
--- NOTE: resizeactive may have a proper hl.dsp.window.resize() form — using hyprctl fallback for now
+hl.bind(mainMod .. " + SHIFT + H", hl.dsp.window.resize({ x = -30, y = 0, relative = true }), { locked = true, repeating = true })
+hl.bind(mainMod .. " + SHIFT + J", hl.dsp.window.resize({ x = 0, y = 30, relative = true }),  { locked = true, repeating = true })
+hl.bind(mainMod .. " + SHIFT + K", hl.dsp.window.resize({ x = 0, y = -30, relative = true }), { locked = true, repeating = true })
+hl.bind(mainMod .. " + SHIFT + L", hl.dsp.window.resize({ x = 30, y = 0, relative = true }),  { locked = true, repeating = true })
 
 -- ── Movement: Mouse ──
 hl.bind(mainMod .. " + mouse:272", hl.dsp.window.drag(),   { mouse = true })
 hl.bind(mainMod .. " + mouse:273", hl.dsp.window.resize(), { mouse = true })
 
 -- ── Movement: Move Window (keycodes for [ and ]) ──
-hl.bind(mainMod .. " + code:34",           hl.dsp.exec_cmd("hyprctl dispatch movewindow l"))
-hl.bind(mainMod .. " + code:35",           hl.dsp.exec_cmd("hyprctl dispatch movewindow r"))
-hl.bind(mainMod .. " + SHIFT + code:34",   hl.dsp.exec_cmd("hyprctl dispatch movewindow u"))
-hl.bind(mainMod .. " + SHIFT + code:35",   hl.dsp.exec_cmd("hyprctl dispatch movewindow d"))
--- NOTE: may have a proper hl.dsp.window.move({ direction = "l" }) form
+hl.bind(mainMod .. " + code:34",           hl.dsp.window.move({ direction = "l" }))
+hl.bind(mainMod .. " + code:35",           hl.dsp.window.move({ direction = "r" }))
+hl.bind(mainMod .. " + SHIFT + code:34",   hl.dsp.window.move({ direction = "u" }))
+hl.bind(mainMod .. " + SHIFT + code:35",   hl.dsp.window.move({ direction = "d" }))
 
 -- ── Movement: Focus ──
 hl.bind(mainMod .. " + left",  hl.dsp.focus({ direction = "left" }))
@@ -56,9 +54,9 @@ for i = 1, 10 do
     -- Switch to workspace
     hl.bind(mainMod .. " + " .. key,             hl.dsp.focus({ workspace = i }))
     -- Move window silently (stay on current workspace)
-    hl.bind(mainMod .. " + SHIFT + " .. key,     hl.dsp.window.move({ workspace = i, silent = true }))
+    hl.bind(mainMod .. " + SHIFT + " .. key,     hl.dsp.window.move({ workspace = i, follow = false }))
     -- Move window AND switch
-    hl.bind("ALT + SHIFT + " .. key,             hl.dsp.window.move({ workspace = i }))
+    hl.bind("ALT + SHIFT + " .. key,             hl.dsp.window.move({ workspace = i, follow = true }))
 end
 -- NOTE: movetoworkspacesilent { silent = true } is inferred — verify on 0.55
 
