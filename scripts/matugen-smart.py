@@ -224,6 +224,34 @@ def generate_discord_css(colors):
     quickcss = Path.home() / ".config" / "legcord" / "quickCss.css"
     quickcss.write_text(css)
 
+    # Crop wallpaper to centered portrait for rofi imagebox
+    wall_file = Path.home() / ".cache" / "wallpaper-colors" / "current"
+    rofi_img = Path.home() / ".config" / "rofi" / "images" / "current-wallpaper.png"
+    try:
+        if wall_file.exists():
+            wall_path = wall_file.read_text().strip()
+            subprocess.run([
+                "magick", wall_path,
+                "-gravity", "center",
+                "-crop", "1:1+0+0",        # square crop from center
+                "-resize", "450x450",      # fit rofi imagebox
+                "+repage",
+                str(rofi_img),
+            ], capture_output=True, timeout=10)
+    except Exception:
+        pass
+
+    # Run matugen normally to process templates (rofi, discord, etc.)
+    try:
+        if wall_file.exists():
+            wall_path = wall_file.read_text().strip()
+            subprocess.run(
+                ["matugen", "image", wall_path, "--prefer", "saturation"],
+                capture_output=True, timeout=10
+            )
+    except Exception:
+        pass
+
     # Write zen browser accent color for live sync
     zen_color_file = Path.home() / ".cache" / "matugen-zen-color"
     zen_color_file.write_text(primary + "\n")
