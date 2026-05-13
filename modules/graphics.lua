@@ -5,7 +5,7 @@
 hl.config({
     general = {
         gaps_in    = 5,
-        gaps_out   = "10, 20, 20, 20",  -- NOTE: may need {10, 20, 20, 20} table syntax
+        gaps_out   = { top = 10, right = 20, bottom = 20, left = 20 },
         border_size = 2,
 
         col = {
@@ -44,7 +44,6 @@ hl.config({
     },
 
     dwindle = {
-        pseudotile    = true,
         preserve_split = true,
     },
 
@@ -61,7 +60,7 @@ hl.config({
         disable_hyprland_logo    = true,
         animate_manual_resizes   = true,
         session_lock_xray        = 1,
-        vfr                      = false,
+
     },
 
     xwayland = {
