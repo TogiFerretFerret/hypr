@@ -63,10 +63,7 @@ print(f'{c4} {c5} {c8}')
 " | read C4 C5 C8
 
             if [ -n "$C4" ]; then
-                sed -i \
-                    -e "s/col\.active_border = .*/col.active_border = rgba(${C4}ee) rgba(${C5}ee) 45deg/" \
-                    -e "s/col\.inactive_border = .*/col.inactive_border = rgba(${C8}aa)/" \
-                    "$HOME/.config/hypr/modules/graphics.conf"
+                echo "hl.config({ general = { col = { active_border = { colors = {\"rgba(${C4}ee)\", \"rgba(${C5}ee)\"}, angle = 45 }, inactive_border = \"rgba(${C8}aa)\" } } })" > "$HOME/.config/hypr/modules/colors.lua"
                 hyprctl reload 2>/dev/null
             fi
 

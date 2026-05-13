@@ -21,6 +21,9 @@ require("modules.autostart")
 -- 4. Look and Feel
 require("modules.graphics")
 
+-- 4b. Dynamic colors (overwritten by wallpaper scripts)
+require("modules.colors")
+
 -- 5. Plugins
 require("modules.plugins")
 
