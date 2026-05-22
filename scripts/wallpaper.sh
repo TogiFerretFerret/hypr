@@ -46,7 +46,7 @@ print(f'C8={c[\"color1\"].lstrip(\"#\")}')
 ")"
 
 [ -n "$C4" ] && {
-    echo "hl.config({ general = { col = { active_border = { colors = {\"rgba(${C4}ee)\", \"rgba(${C5}ee)\"}, angle = 45 }, inactive_border = \"rgba(${C8}aa)\" } } })" > "$HOME/.config/hypr/modules/colors.lua"
+    echo "hl.config({ general = { col = { active_border = { colors = {\"rgba(${C4}ee)\", \"rgba(${C5}ee)\"}, angle = 45 }, inactive_border = \"rgba(${C8}aa)\" } }, decoration = { glow = { color = \"rgba(${C4}ee)\", color_inactive = \"rgba(${C4}44)\" } } })" > "$HOME/.config/hypr/modules/colors.lua"
     hyprctl reload 2>/dev/null
 }
 

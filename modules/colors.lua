@@ -1,1 +1,1 @@
-hl.config({ general = { col = { active_border = { colors = {"rgba(2e50a8ee)", "rgba(f7acffee)"}, angle = 45 }, inactive_border = "rgba(2e50a8aa)" } } })
+hl.config({ general = { col = { active_border = { colors = {"rgba(6a9bf9ee)", "rgba(faabffee)"}, angle = 45 }, inactive_border = "rgba(6a9bf9aa)" } }, decoration = { glow = { color = "rgba(6a9bf9ee)", color_inactive = "rgba(6a9bf944)" } } })
