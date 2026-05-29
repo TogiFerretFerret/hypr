@@ -1,6 +1,28 @@
 # river's hyprland dots — EVA-00 // ASAHI
 
-a hyprland config built on an apple silicon machine (asahi linux) with a focus on custom tooling, dynamic color theming, and a fully QML-based UI stack. most of the actual shell/bar/overlay work lives in a separate quickshell repo — this repo is the hyprland side of things.
+a hyprland config built on an apple silicon machine running asahi linux, with a focus on custom tooling, dynamic color theming, and a fully QML-based UI stack. most of the actual shell/bar/overlay work lives in a separate quickshell repo — this repo is the hyprland side of things.
+
+the name EVA-00 comes from neon genesis evangelion. the color palette (blue + lavender) is loosely inspired by unit 00's prototype aesthetic.
+
+---
+
+## why i made this
+
+i've been ricing linux desktops for a while, but i got frustrated with how most setups are just a mix of other people's configs glued together. i wanted to build something from scratch that i actually understood end-to-end — where i knew why every line was there.
+
+the other motivation was running hyprland on asahi linux (apple silicon). asahi is still pretty rough around the edges, and a lot of existing configs assume x86 hardware with nvidia/amd GPUs. getting a smooth, fast desktop experience on an M-series chip required writing a bunch of custom workarounds and tooling that i haven't seen anyone else document.
+
+the biggest thing i built custom was the color pipeline. most ricing setups use pywal, which does a decent job but uses a fairly naive color extraction algorithm and produces colors that don't always look great or have enough contrast. i wanted something that worked in perceptually uniform color space (CIELAB) so the extracted palette would look natural and consistent regardless of the wallpaper.
+
+---
+
+## what i learned building this
+
+- **how hyprland's lua config works** — the lua API is relatively new and documentation is sparse. i had to read the hyprland source and experiment a lot to understand how `hl.config()`, `hl.on()`, and `hl.curve()` map to the underlying config system.
+- **color science** — implementing k-means clustering in CIELAB instead of RGB taught me a lot about how human color perception works and why RGB distance is a bad proxy for visual similarity.
+- **QML** — the lockscreen and parts of the quickshell UI are my first serious QML projects. QML is a weird language (declarative JS-ish) and the learning curve was steep, but it's genuinely powerful for building animated UIs.
+- **linux graphics stack** — dealing with wayland, swww, sddm, hyprlock, and getting them all to play nicely together on asahi taught me a lot about how the linux display stack actually works under the hood.
+- **IPC and daemons** — the stats bridge uses a unix socket to multiplex system metrics to multiple quickshell widgets. writing a small daemon in python and having QML consume it over a socket was new territory for me.
 
 ---
 
