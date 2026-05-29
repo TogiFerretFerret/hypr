@@ -110,4 +110,38 @@ uses hyprland's `glow` decoration (added recently) alongside blur and shadow. gl
 
 ---
 
+## installation / using this config
+
+> **warning:** this config is built specifically for my machine (asahi linux, apple M-series, single 1080p display). you will almost certainly need to adapt it. that said, here's how to get started if you want to try it.
+
+**dependencies:**
+- hyprland (with lua support — recent versions)
+- quickshell
+- swww
+- rofi
+- ghostty (or swap `Terminal` in `hyprland.lua`)
+- hypridle, hyprlock (or hyprpm)
+- python 3.11+ with `numpy`, `pillow`, `scikit-learn` (for colorgen)
+- clipvault
+- hyprpolkitagent
+- fcitx5 (optional, for CJK input)
+
+**steps:**
+1. clone this repo to `~/.config/hypr/`
+2. edit `modules/hardware.lua` to match your monitor(s)
+3. edit `hyprland.lua` to set your preferred terminal, file manager, and menu launcher
+4. install python deps: `pip install numpy pillow scikit-learn`
+5. put some wallpapers in `~/Pictures/Wallpapers/`
+6. launch hyprland
+
+for the lockscreen, copy the `lockscreen/` folder to wherever your sddm themes directory is (usually `/usr/share/sddm/themes/`) and set it in `/etc/sddm.conf`.
+
+---
+
+## screenshots
+
+*(coming soon — i keep meaning to take proper ones)*
+
+---
+
 all dots are spread across repos — this one is just hyprland. a master repo links everything together.
