@@ -2,11 +2,14 @@
 import json
 import os
 import re
+import glob
+from concurrent.futures import ThreadPoolExecutor
 
 # Paths
 CACHE_FILE = os.path.expanduser("~/.cache/wal/colors.json")
 FF_DIR = os.path.expanduser("~/.config/fastfetch")
 TEMPLATES = ["config.jsonc.template", "wide.jsonc.template"]
+SEGMENTS_DIR = os.path.join(FF_DIR, "segments")
 
 def hex_to_rgb_ansi(hex_color):
     hex_color = hex_color.lstrip('#')
@@ -50,21 +53,24 @@ def main():
         "{#0}": "\\u001b[0m"
     }
 
-    for tpl in TEMPLATES:
-        tpl_path = os.path.join(FF_DIR, tpl)
-        out_path = os.path.join(FF_DIR, tpl.replace(".template", ""))
-        
-        if not os.path.exists(tpl_path):
-            continue
-            
+    def process_template(tpl_path, out_path):
         with open(tpl_path, "r") as f:
             content = f.read()
-            
         for key, value in replacements.items():
             content = content.replace(key, value)
-            
         with open(out_path, "w") as f:
             f.write(content)
+
+    jobs = []
+    for tpl in TEMPLATES:
+        tpl_path = os.path.join(FF_DIR, tpl)
+        if os.path.exists(tpl_path):
+            jobs.append((tpl_path, os.path.join(FF_DIR, tpl.replace(".template", ""))))
+    for tpl_path in glob.glob(os.path.join(SEGMENTS_DIR, "*.jsonc.template")):
+        jobs.append((tpl_path, tpl_path.replace(".template", "")))
+
+    with ThreadPoolExecutor() as pool:
+        pool.map(lambda job: process_template(*job), jobs)
 
 if __name__ == "__main__":
     main()
