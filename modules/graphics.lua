@@ -96,4 +96,5 @@ hl.animation({ leaf = "layersOut",     enabled = true, speed = 1.5,  bezier = "l
 hl.animation({ leaf = "fadeLayersIn",  enabled = true, speed = 1.79, bezier = "almostLinear" })
 hl.animation({ leaf = "fadeLayersOut", enabled = true, speed = 1.39, bezier = "almostLinear" })
 hl.animation({ leaf = "workspaces",    enabled = true, speed = 1.84, bezier = "easeInOutCubic", style = "slide" })
+hl.animation({ leaf = "specialWorkspace",enabled = true, speed = 1.84, bezier = "easeInOutCubic", style = "slidevert -100%" })
 hl.animation({ leaf = "zoomFactor",    enabled = true, speed = 7,    bezier = "quick" })
