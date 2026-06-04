@@ -22,8 +22,50 @@ url = (
 
 try:
     d = json.loads(urllib.request.urlopen(url, timeout=10).read())
+    if 'current' not in d:
+        raise ValueError("bad response")
 except Exception:
-    sys.exit(1)
+    # fallback to wttr.in
+    try:
+        wttr_url = f'https://wttr.in/{lat},{lon}?format=j1'
+        w = json.loads(urllib.request.urlopen(wttr_url, timeout=10).read())
+        c = w['current_condition'][0]
+        dirs = ['N','NNE','NE','ENE','E','ESE','SE','SSE','S','SSW','SW','WSW','W','WNW','NW','NNW']
+        wdir = dirs[round(int(c['winddirDegree']) / 22.5) % 16]
+        desc = c['weatherDesc'][0]['value']
+        print(c['temp_F'])
+        print(c['FeelsLikeF'])
+        print(desc)
+        print(c['humidity'])
+        print(c['windspeedKmph'] + ' ' + wdir)
+        # next 6 hours from today's hourly
+        now = datetime.datetime.now()
+        printed = 0
+        for day in w['weather']:
+            for h in day['hourly']:
+                hhmm = h['time'].zfill(4)
+                dt = datetime.datetime.strptime(day['date'] + ' ' + hhmm, '%Y-%m-%d %H%M')
+                if dt >= now and printed < 6:
+                    t = dt.strftime('%-I:%M %p')
+                    print(t + '|' + h['tempF'] + '|' + h['weatherDesc'][0]['value'])
+                    printed += 1
+        print('---DAILY---')
+        for day in w['weather']:
+            dt = datetime.datetime.strptime(day['date'], '%Y-%m-%d')
+            label = dt.strftime('%a')
+            if dt.date() == now.date(): label = 'Today'
+            elif dt.date() == (now + datetime.timedelta(days=1)).date(): label = 'Tmrw'
+            ddesc = day['hourly'][4]['weatherDesc'][0]['value']
+            print(label + '|' + day['maxtempF'] + '|' + day['mintempF'] + '|' + ddesc + '|' + day['date'])
+        print('---HOURLY-ALL---')
+        for day in w['weather']:
+            for h in day['hourly']:
+                hhmm = h['time'].zfill(4)
+                dt = datetime.datetime.strptime(day['date'] + ' ' + hhmm, '%Y-%m-%d %H%M')
+                print(day['date'] + '|' + dt.strftime('%-I %p') + '|' + h['tempF'] + '|' + h['weatherDesc'][0]['value'])
+    except Exception:
+        sys.exit(1)
+    sys.exit(0)
 
 c = d['current']
 
