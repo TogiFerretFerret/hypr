@@ -25,44 +25,65 @@ try:
     if 'current' not in d:
         raise ValueError("bad response")
 except Exception:
-    # fallback to wttr.in
+    # fallback to NWS (US only)
     try:
-        wttr_url = f'https://wttr.in/{lat},{lon}?format=j1'
-        w = json.loads(urllib.request.urlopen(wttr_url, timeout=10).read())
-        c = w['current_condition'][0]
-        dirs = ['N','NNE','NE','ENE','E','ESE','SE','SSE','S','SSW','SW','WSW','W','WNW','NW','NNW']
-        wdir = dirs[round(int(c['winddirDegree']) / 22.5) % 16]
-        desc = c['weatherDesc'][0]['value']
-        print(c['temp_F'])
-        print(c['FeelsLikeF'])
-        print(desc)
-        print(c['humidity'])
-        print(c['windspeedKmph'] + ' ' + wdir)
-        # next 6 hours from today's hourly
-        now = datetime.datetime.now()
-        printed = 0
-        for day in w['weather']:
-            for h in day['hourly']:
-                hhmm = h['time'].zfill(4)
-                dt = datetime.datetime.strptime(day['date'] + ' ' + hhmm, '%Y-%m-%d %H%M')
-                if dt >= now and printed < 6:
-                    t = dt.strftime('%-I:%M %p')
-                    print(t + '|' + h['tempF'] + '|' + h['weatherDesc'][0]['value'])
-                    printed += 1
+        req = urllib.request.Request(f'https://api.weather.gov/points/{lat},{lon}', headers={'User-Agent': 'weather.py'})
+        pts = json.loads(urllib.request.urlopen(req, timeout=10).read())['properties']
+        def nws_get(url):
+            r = urllib.request.Request(url, headers={'User-Agent': 'weather.py'})
+            return json.loads(urllib.request.urlopen(r, timeout=10).read())['properties']['periods']
+
+        hourly = nws_get(pts['forecastHourly'])
+        daily_periods = nws_get(pts['forecast'])
+
+        now = datetime.datetime.now().astimezone()
+        cur = hourly[0]
+
+        def mph_to_kmh(s):
+            # "12 mph" or "10 to 15 mph"
+            nums = [int(x) for x in s.split() if x.isdigit()]
+            mph = sum(nums) / len(nums) if nums else 0
+            return str(round(mph * 1.60934))
+
+        print(cur['temperature'])
+        print(cur['temperature'])  # NWS has no feels-like, use temp
+        print(cur['shortForecast'])
+        print(cur['relativeHumidity']['value'])
+        print(mph_to_kmh(cur['windSpeed']) + ' ' + cur['windDirection'])
+
+        # next 6 hours
+        future = [h for h in hourly if datetime.datetime.fromisoformat(h['startTime']) >= now][:6]
+        for h in future:
+            dt = datetime.datetime.fromisoformat(h['startTime'])
+            print(dt.strftime('%-I:%M %p') + '|' + str(h['temperature']) + '|' + h['shortForecast'])
+
+        # daily — pair day+night periods by date
         print('---DAILY---')
-        for day in w['weather']:
-            dt = datetime.datetime.strptime(day['date'], '%Y-%m-%d')
-            label = dt.strftime('%a')
-            if dt.date() == now.date(): label = 'Today'
-            elif dt.date() == (now + datetime.timedelta(days=1)).date(): label = 'Tmrw'
-            ddesc = day['hourly'][4]['weatherDesc'][0]['value']
-            print(label + '|' + day['maxtempF'] + '|' + day['mintempF'] + '|' + ddesc + '|' + day['date'])
+        days = {}
+        for p in daily_periods:
+            dt = datetime.datetime.fromisoformat(p['startTime'])
+            key = dt.date()
+            if key not in days:
+                days[key] = {}
+            if p['isDaytime']:
+                days[key]['max'] = p['temperature']
+                days[key]['desc'] = p['shortForecast']
+            else:
+                days[key]['min'] = p['temperature']
+        for date, info in sorted(days.items()):
+            if 'max' not in info or 'min' not in info:
+                continue
+            label = date.strftime('%a')
+            today = now.date()
+            if date == today: label = 'Today'
+            elif date == today + datetime.timedelta(days=1): label = 'Tmrw'
+            print(label + '|' + str(info['max']) + '|' + str(info['min']) + '|' + info['desc'] + '|' + str(date))
+
+        # all hourly
         print('---HOURLY-ALL---')
-        for day in w['weather']:
-            for h in day['hourly']:
-                hhmm = h['time'].zfill(4)
-                dt = datetime.datetime.strptime(day['date'] + ' ' + hhmm, '%Y-%m-%d %H%M')
-                print(day['date'] + '|' + dt.strftime('%-I %p') + '|' + h['tempF'] + '|' + h['weatherDesc'][0]['value'])
+        for h in hourly:
+            dt = datetime.datetime.fromisoformat(h['startTime'])
+            print(str(dt.date()) + '|' + dt.strftime('%-I %p') + '|' + str(h['temperature']) + '|' + h['shortForecast'])
     except Exception:
         sys.exit(1)
     sys.exit(0)
