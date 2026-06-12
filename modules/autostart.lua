@@ -7,11 +7,13 @@ hl.on("hyprland.start", function()
     hl.exec_cmd("hyprpm reload")
     hl.exec_cmd("hypridle")
     hl.exec_cmd("fcitx5 &")
+    hl.exec_cmd("nm-applet &")
     hl.exec_cmd("wl-paste --watch clipvault store")
     hl.exec_cmd("systemctl --user start hyprpolkitagent")
 
     -- UI Elements
     hl.exec_cmd("quickshell &")
+    hl.exec_cmd("nm-applet --indicator &")
     -- Notifications handled by quickshell NotificationServer
 
     -- Wallpaper with swww (color-synced)
