@@ -1,0 +1,47 @@
+#!/usr/bin/env bash
+# Usage: nordvpn-connect <hostname> <conn_name>
+# On-demand: downloads one .ovpn, imports it, connects, cleans up old Nord connections.
+set -euo pipefail
+
+HOSTNAME="$1"
+CONN_NAME="$2"
+CREDS_USER="cwpkvdkmkKa6pXH4Ur21CUEb"
+CREDS_PASS="9knZVcWXvcT73jL7Vwm5gaxD"
+OVPN_URL="https://downloads.nordcdn.com/configs/files/ovpn_udp/servers/${HOSTNAME}.udp.ovpn"
+TMPFILE="/tmp/${HOSTNAME}.udp.ovpn"
+
+echo "cleaning"
+nmcli -t -f NAME,TYPE connection show 2>/dev/null \
+    | awk -F: 'NF>=2 && $2=="vpn" && $1~/^Nord / {print $1}' \
+    | while IFS= read -r n; do
+        nmcli connection delete "$n" 2>/dev/null || true
+    done
+
+echo "downloading"
+curl -sf --max-time 20 "$OVPN_URL" -o "$TMPFILE" \
+    || { echo "error:download failed for ${HOSTNAME}"; exit 1; }
+
+echo "importing"
+nmcli connection import type openvpn file "$TMPFILE" >/dev/null 2>&1 \
+    || { rm -f "$TMPFILE"; echo "error:import failed"; exit 1; }
+rm -f "$TMPFILE"
+
+echo "configuring"
+IMPORTED="${HOSTNAME}.udp"
+nmcli connection modify "$IMPORTED" \
+    connection.id "$CONN_NAME" \
+    +vpn.data "username=${CREDS_USER}" \
+    +vpn.data "password-flags=0" \
+    vpn.secrets "password=${CREDS_PASS}" \
+    ipv6.method disabled 2>/dev/null \
+    || { echo "error:configure failed"; exit 1; }
+
+echo "connecting"
+nmcli connection up "$CONN_NAME" >/dev/null 2>&1 \
+    || { echo "error:connect failed"; exit 1; }
+
+# Block IPv6 to prevent leaks while VPN is active
+sudo nft add table ip6 nordvpn_leak 2>/dev/null
+sudo nft add chain ip6 nordvpn_leak output '{ type filter hook output priority 0; policy drop; }' 2>/dev/null
+
+echo "done"
