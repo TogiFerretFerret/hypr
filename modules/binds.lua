@@ -77,6 +77,9 @@ hl.bind(mainMod .. " + SHIFT + W", hl.dsp.exec_cmd("~/.config/hypr/scripts/wallp
 -- ── Karaoke mode ──
 hl.bind(mainMod .. " + K", hl.dsp.global("quickshell:karaoke"))
 
+-- ── VPN picker ──
+hl.bind(mainMod .. " + N", hl.dsp.global("quickshell:vpn"))
+
 -- ── Multimedia ──
 hl.bind("XF86AudioRaiseVolume",  hl.dsp.exec_cmd("wpctl set-volume -l 1 @DEFAULT_AUDIO_SINK@ 5%+"),               { locked = true, repeating = true })
 hl.bind("XF86AudioLowerVolume",  hl.dsp.exec_cmd("wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-"),                     { locked = true, repeating = true })
