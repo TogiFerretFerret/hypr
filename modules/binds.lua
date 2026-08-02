@@ -36,6 +36,29 @@ hl.bind(mainMod .. " + SHIFT + L", hl.dsp.window.resize({ x = 30, y = 0, relativ
 hl.bind(mainMod .. " + mouse:272", hl.dsp.window.drag(),   { mouse = true })
 hl.bind(mainMod .. " + mouse:273", hl.dsp.window.resize(), { mouse = true })
 
+-- ── Keyboard Mouse Emulation (warpd) ──
+hl.bind(mainMod .. " + G",         hl.dsp.exec_cmd("/home/river/.local/bin/warpd --grid"))
+hl.bind(mainMod .. " + X",         hl.dsp.exec_cmd("/home/river/.local/bin/warpd --hint"))
+hl.bind(mainMod .. " + Z",         hl.dsp.exec_cmd("/home/river/.local/bin/warpd --normal"))
+hl.bind("CTRL + SHIFT + 4",        hl.dsp.exec_cmd("/home/river/.local/bin/warpd --screenshot"))
+
+-- ── Mouse movement submap (CTRL+SPACE to enter, ESC/CTRL+SPACE to exit) ──
+hl.bind("CTRL + SPACE", hl.dsp.submap("mousemove"))
+
+hl.define_submap("mousemove", "escape", function()
+    hl.bind("CTRL + SPACE",  hl.dsp.submap("reset"))
+    hl.bind("H", hl.dsp.exec_cmd("ydotool mousemove -- -20 0"), { repeating = true })
+    hl.bind("J", hl.dsp.exec_cmd("ydotool mousemove -- 0 20"),  { repeating = true })
+    hl.bind("K", hl.dsp.exec_cmd("ydotool mousemove -- 0 -20"), { repeating = true })
+    hl.bind("L", hl.dsp.exec_cmd("ydotool mousemove -- 20 0"),  { repeating = true })
+    hl.bind("SHIFT + H", hl.dsp.exec_cmd("ydotool mousemove -- -5 0"), { repeating = true })
+    hl.bind("SHIFT + J", hl.dsp.exec_cmd("ydotool mousemove -- 0 5"),  { repeating = true })
+    hl.bind("SHIFT + K", hl.dsp.exec_cmd("ydotool mousemove -- 0 -5"), { repeating = true })
+    hl.bind("SHIFT + L", hl.dsp.exec_cmd("ydotool mousemove -- 5 0"),  { repeating = true })
+    hl.bind("M", hl.dsp.exec_cmd("ydotool click 0xC0"))
+end)
+
+
 -- ── Movement: Move Window (keycodes for [ and ]) ──
 hl.bind(mainMod .. " + code:34",           hl.dsp.window.move({ direction = "l" }))
 hl.bind(mainMod .. " + code:35",           hl.dsp.window.move({ direction = "r" }))
